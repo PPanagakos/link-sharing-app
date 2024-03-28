@@ -1,0 +1,30 @@
+.primaryButton{
+    font-size:14px;
+    color:var(--primary-purple-color);
+    background:#FFF;
+    border:1px solid var(--primary-purple-color);
+    border-radius: 6px;
+    width:100%;
+    padding:8px;
+}
+
+.primaryButton:hover{
+    background-color: var(--light-purple-color);
+}
+
+.secondaryButton{
+    color: #FFF;
+    background:var(--primary-purple-color);
+    border-radius: 6px;
+    width:100%;
+    padding:0.6rem;
+    font-size: small;
+}
+
+.secondaryButton:hover{
+    background:var(--secondary-purple-color);
+}
+
+
+
+

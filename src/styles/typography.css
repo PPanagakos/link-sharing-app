@@ -1,0 +1,21 @@
+
+.fontRegular {
+    font-family: 'InstrumentSansRegular', sans-serif;
+    font-size: 16px;
+}
+
+.fontBold {
+    font-family: 'InstrumentSansBold', sans-serif;
+}
+
+.fontSemiBold {
+    font-family: 'InstrumentSansSemiBold', sans-serif;
+}
+
+.fontItalic {
+    font-family: 'InstrumentSansItalic', sans-serif;
+}
+
+.fontVariable {
+    font-family: 'InstrumentSansVariable', sans-serif;
+}

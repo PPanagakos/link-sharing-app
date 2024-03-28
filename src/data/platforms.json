@@ -1,0 +1,17 @@
+[
+    {"label": "Github", "image": "../../src/assets/images/icon-github.svg", "color": "#1a1a1a"},
+    {"label": "Twitter", "image": "../../src/assets/images/icon-twitter.svg", "color": "#1DA1F2"},
+    {"label": "Linkedln", "image": "../../src/assets/images/icon-linkedin.svg", "color": "#2867B2"},
+    {"label": "Youtube", "image": "../../src/assets/images/icon-youtube.svg", "color": "#FF0000"},
+    {"label": "Facebook", "image": "../../src/assets/images/icon-facebook.svg", "color": "#4267B2"},
+    {"label": "Twitch", "image": "../../src/assets/images/icon-twitch.svg", "color": "#6441A4"},
+    {"label": "Dev.to", "image": "../../src/assets/images/icon-devto.svg", "color": "#333333"},
+    {"label": "Codewars", "image": "../../src/assets/images/icon-codewars.svg", "color": "#B1361E"},
+    {"label": "Codepen", "image": "../../src/assets/images/icon-codepen.svg", "color": "#000000"},
+    {"label": "freeCodeCamp", "image": "../../src/assets/images/icon-freecodecamp.svg", "color": "#006400"},
+    {"label": "GitLab", "image": "../../src/assets/images/icon-gitlab.svg", "color": "#FC6D26"},
+    {"label": "Hashnode", "image": "../../src/assets/images/icon-hashnode.svg", "color": "#2962FF"},
+    {"label": "StackOverflow", "image": "../../src/assets/images/icon-stack-overflow.svg", "color": "#F48024"}
+  ]
+  
+

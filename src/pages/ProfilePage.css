@@ -1,0 +1,25 @@
+.profile-page {
+    height: 100vh;
+    position: relative;
+    background-color: white;
+}
+
+@media (min-width: 768px) {
+    .profile-page-container {
+        position: absolute;
+        border-radius: 30px;
+        background-color: #FFF;
+        padding: 30px;
+        max-height: 550px;
+        overflow-y: scroll;
+        width: 300px;
+        top: 110px; 
+        left: 50%; 
+        margin-bottom: 100px;
+        transform: translate(-50%, -50%); 
+    }
+    
+    .profile-page {
+         background-color: transparent;
+    }
+}

@@ -1,0 +1,48 @@
+.footer-container {
+    width: 100%;
+  
+  }
+  
+  .border-bottom {
+    border-bottom: 1px solid gray;
+    margin-bottom: 15px;
+  }
+  
+  .flex-end {
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .auto-margin-right {
+    margin-left: auto;
+  }
+
+.save-button:disabled{
+  color:#FFF;
+    background:var(--secondary-purple-color);
+    opacity: 0.4;
+    border:1px solid var(--light-purple-color);
+    border-radius: 6px;
+    padding:8px;
+}
+  
+  /* MediaQuery for screen width 768px and larger */
+  @media (min-width: 768px) {
+    .save-button {
+      width: 80px; 
+   
+    }
+  
+    .auto-margin-right {
+      margin-right: 30px; 
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .footer-container {
+       
+        max-width: 600px;
+      }
+      
+  }
+  

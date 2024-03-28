@@ -1,0 +1,13 @@
+.links-container {
+    height: 450px;
+    overflow-y: auto; 
+  }
+
+ 
+  
+@media (min-width: 1024px) {
+    .links-container {
+        height: 400px;
+        overflow-y: auto; 
+      }
+}
