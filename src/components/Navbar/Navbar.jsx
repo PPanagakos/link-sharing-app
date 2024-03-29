@@ -51,7 +51,7 @@ function Navbar() {
       className="navbar-box"
       bg="white"
       p={{ base: 3, md: 5 }}
-      mb={{ base: "20px", md: "50px" }}
+      mb={{ base: "20px", md: "35px" }}
     >
       <Flex align="center" justify="space-between">
         <Menu>
