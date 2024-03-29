@@ -7,6 +7,7 @@ import passwordIcon from "../../../assets/images/icon-password.svg";
 import { VStack, Box, useToast } from "@chakra-ui/react";
 import AuthFormFooter from "./AuthFormFooter";
 import { useAuth } from "../../../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 const CreateAccountForm = () => {
   const { createAccount, authError } = useAuth();
@@ -17,10 +18,10 @@ const CreateAccountForm = () => {
     confirmPassword: "",
   });
   const [formErrors, setFormErrors] = useState({});
+  const navigate = useNavigate();
 
   const handleChange = (field, value) => {
     setFormFields((prevState) => ({ ...prevState, [field]: value }));
-    // Optionally reset errors on change
     if (errors[field])
       setFormErrors((prevState) => ({ ...prevState, [field]: "" }));
   };
@@ -51,6 +52,7 @@ const CreateAccountForm = () => {
         duration: 5000,
         isClosable: true,
       });
+      navigate("/");
     } catch (error) {
       console.error("Failed to create an account:", error);
       toast({
