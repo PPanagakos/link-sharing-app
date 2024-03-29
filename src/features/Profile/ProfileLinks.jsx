@@ -1,7 +1,7 @@
 import React from "react";
 import { VStack } from "@chakra-ui/react";
 import PlatformItem from "./PlatformItem";
-import platformsData from "../../data/platforms.json";
+import platformsData from "../../data/platforms";
 import useLinksManager from "../../hooks/useLinksManager";
 
 const ProfileLinks = () => {

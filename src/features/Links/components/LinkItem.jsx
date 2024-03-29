@@ -13,7 +13,7 @@ import {
   FormLabel,
 } from "@chakra-ui/react";
 import "../styles/Links.css";
-import platforms from "../../../data/platforms.json";
+import platforms from "../../../data/platforms";
 import Draganddrop from "../../../assets/images/icon-drag-and-drop.svg";
 import linkIcon from "../../../assets/images/icon-link.svg";
 import { ChevronDownIcon } from "@chakra-ui/icons";
