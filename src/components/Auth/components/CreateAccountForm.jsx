@@ -22,7 +22,7 @@ const CreateAccountForm = () => {
 
   const handleChange = (field, value) => {
     setFormFields((prevState) => ({ ...prevState, [field]: value }));
-    if (errors[field])
+    if (formErrors[field])
       setFormErrors((prevState) => ({ ...prevState, [field]: "" }));
   };
 
@@ -99,7 +99,10 @@ const CreateAccountForm = () => {
             onChange={(e) => handleChange("confirmPassword", e.target.value)}
             error={formErrors.confirmPassword}
           />
-          <CustomButton className="secondaryButton fontSemiBold auth-button">
+          <CustomButton
+            type="submit"
+            className="secondaryButton fontSemiBold auth-button"
+          >
             Create Account
           </CustomButton>
         </VStack>

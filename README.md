@@ -1,46 +1,42 @@
 # Link Sharing App
 
-LinkSharing is a web application that allows users to easily manage and share their social media and other personal links in one convenient location.
+A full-stack-style React + Firebase app for building and sharing a social profile with platform links.
 
 ## Live Demo
 
 You can view the live version of the application here: [Link-Sharing App](https://link-sharing-app-mu.vercel.app)
 
-
 ## Features
 
-- **User Authentication**: Secure login and account creation process.
-- **Profile Customization**: Users can customize their profile with a picture and personalized links.
-- **Link Management**: Add, update, and delete links to social media profiles, websites, or any online presence.
-- **Responsive Design**: Accessible on both desktop and mobile devices.
-- **Shareable Profile**: Users get a unique link to their profile that they can share with others.
+- User authentication and account creation
+- Profile customization (name, email, profile image)
+- Link CRUD with drag-and-drop ordering
+- Platform-specific URL validation
+- Shareable public profile page
+- Responsive layout for mobile and desktop
 
-## Technologies Used
+## Run locally
 
-- React.js
-- Firebase Authentication for secure login and account management.
-- Firestore Database for storing user data and links.
-- Chakra UI for styling and layout.
-- Vercel for deployment.
+1. Install dependencies:
+   - `npm install`
+2. Start development server:
+   - `npm run dev`
 
-## Getting Started
+## Environment variables
 
-To run this project locally, follow these steps:
+Create a `.env` file with Firebase values:
 
-Clone the repository:
+- `VITE_FIREBASE_API_KEY`
+- `VITE_FIREBASE_AUTH_DOMAIN`
+- `VITE_FIREBASE_PROJECT_ID`
+- `VITE_FIREBASE_STORAGE_BUCKET`
+- `VITE_FIREBASE_MESSAGING_SENDER_ID`
+- `VITE_FIREBASE_APP_ID`
+- `VITE_MEASUREMENT_ID`
 
-```sh
-git clone https://github.com/username/link-sharing-app.git
-```
-Navigate to the project directory:
-```sh
-cd link-sharing-app
-```
-Install the dependencies:
-```sh
-npm install
-```
-Start the development server:
-```sh
-npm run dev
-```
+Optional demo-account variables for one-click showcase login:
+
+- `VITE_DEMO_EMAIL`
+- `VITE_DEMO_PASSWORD`
+
+When demo credentials are configured, the login page exposes a "Try Demo Account" button. On first login, demo profile details and sample links are seeded automatically.

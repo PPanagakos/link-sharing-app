@@ -3,10 +3,10 @@ import { Box, Image, Text, VStack, Center } from "@chakra-ui/react";
 import icon from "../../assets/images/icon-profile-details-header.svg";
 import useUserProfile from "../../hooks/useUserProfile";
 
-function ProfileInfo() {
-  const { userProfile, error } = useUserProfile();
+function ProfileInfo({ userId }) {
+  const { userProfile, profileError } = useUserProfile(userId);
 
-  if (error) {
+  if (profileError && profileError !== "No such document!") {
     return (
       <Center p={10}>Error loading profile. Please try again later.</Center>
     );
@@ -21,12 +21,12 @@ function ProfileInfo() {
   }
 
   return (
-    <Center p={10} flexDirection="column">
+    <Center p={{ base: 6, md: 8 }} flexDirection="column">
       <Box
         borderRadius="full"
         border="2px"
         borderColor="var(--primary-purple-color)"
-        boxSize="70px"
+        boxSize="84px"
         display="flex"
         justifyContent="center"
         alignItems="center"
@@ -39,11 +39,11 @@ function ProfileInfo() {
           borderRadius="full"
         />
       </Box>
-      <VStack spacing={2} mt={4} textAlign="center">
-        <Text fontSize="2xl" fontWeight="bold">
+      <VStack spacing={2} mt={4} textAlign="center" maxW="100%">
+        <Text fontSize={{ base: "xl", md: "2xl" }} fontWeight="bold" noOfLines={2}>
           {userProfile.Info.firstName} {userProfile.Info.lastName}
         </Text>
-        <Text fontSize="sm" color="gray.500">
+        <Text fontSize="sm" color="gray.500" noOfLines={1}>
           {userProfile.Info.email}
         </Text>
       </VStack>

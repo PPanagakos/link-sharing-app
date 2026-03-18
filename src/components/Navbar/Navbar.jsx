@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Flex,
   Image,
@@ -27,8 +27,11 @@ function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
   const [isLargerThan768] = useMediaQuery("(min-width: 768px)");
+  const [isLogoMenuOpen, setIsLogoMenuOpen] = useState(false);
 
   if (location.pathname === "/profile") return <ProfilePageNavbar />;
+  if (location.pathname === "/demo") return null;
+  if (location.pathname.startsWith("/u/")) return null;
   if (location.pathname === "/login" || location.pathname === "/create-account")
     return <AuthNavBar />;
 
@@ -54,17 +57,45 @@ function Navbar() {
       mb={{ base: "20px", md: "35px" }}
     >
       <Flex align="center" justify="space-between">
-        <Menu>
-          <MenuButton as={Button} variant="ghost">
-            <Image
-              src={isLargerThan768 ? devLinksLogo : miniLogoHeader}
-              alt="DevLinks Logo"
-            />
-          </MenuButton>
-          <MenuList>
-            <MenuItem onClick={handleLogout}>Log Out</MenuItem>
-          </MenuList>
-        </Menu>
+        <Box
+          onMouseEnter={() => setIsLogoMenuOpen(true)}
+          onMouseLeave={() => setIsLogoMenuOpen(false)}
+        >
+          <Menu
+            isOpen={isLogoMenuOpen}
+            onOpen={() => setIsLogoMenuOpen(true)}
+            onClose={() => setIsLogoMenuOpen(false)}
+          >
+            <MenuButton
+              as={Button}
+              variant="ghost"
+              onClick={() => setIsLogoMenuOpen((previous) => !previous)}
+              _hover={{ bg: "transparent" }}
+              _active={{ bg: "transparent" }}
+              _expanded={{ bg: "transparent" }}
+            >
+              <Image
+                src={isLargerThan768 ? devLinksLogo : miniLogoHeader}
+                alt="DevLinks Logo"
+              />
+            </MenuButton>
+            <MenuList>
+              <MenuItem
+                onClick={handleLogout}
+                _hover={{
+                  bg: "var(--light-purple-color)",
+                  color: "var(--primary-purple-color)",
+                }}
+                _focus={{
+                  bg: "var(--light-purple-color)",
+                  color: "var(--primary-purple-color)",
+                }}
+              >
+                Log Out
+              </MenuItem>
+            </MenuList>
+          </Menu>
+        </Box>
         <Flex gap={{ base: 10, md: 20 }} align="center">
           <NavLinkItem to="/links" icon={linkHeader} label="Links" />
           <NavLinkItem

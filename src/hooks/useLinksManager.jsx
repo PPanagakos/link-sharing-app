@@ -1,45 +1,66 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { collection, getDocs, writeBatch, doc } from "firebase/firestore";
 import { db } from "../firebase/firebaseconfig";
 import { useAuth } from "./useAuth";
 import { useToast } from "@chakra-ui/react";
 
-function useLinksManager() {
+const createClientId = () =>
+  typeof crypto !== "undefined" && crypto.randomUUID
+    ? crypto.randomUUID()
+    : `link-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+
+function useLinksManager(userIdOverride = null) {
   const [links, setLinks] = useState([]);
+  const [baselineLinks, setBaselineLinks] = useState([]);
   const [removedLinks, setRemovedLinks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const { currentUser } = useAuth();
   const toast = useToast();
+  const targetUserId = userIdOverride ?? currentUser?.uid;
+
+  const normalizeLinksForComparison = useCallback(
+    (linksToNormalize) =>
+      linksToNormalize.map((link, index) => ({
+        id: link.id ?? null,
+        selectedPlatform: link.selectedPlatform ?? "",
+        url: link.url ?? "",
+        order: index,
+      })),
+    []
+  );
+
+  const fetchLinks = useCallback(async () => {
+    if (!targetUserId) return;
+    setLoading(true);
+    setError(null);
+    try {
+      const querySnapshot = await getDocs(collection(db, `users/${targetUserId}/links`));
+      const fetchedLinks = querySnapshot.docs
+        .map((linkDoc) => ({
+          id: linkDoc.id,
+          clientId: linkDoc.id,
+          ...linkDoc.data(),
+        }))
+        .sort((a, b) => (a.order ?? Number.MAX_SAFE_INTEGER) - (b.order ?? Number.MAX_SAFE_INTEGER));
+      setLinks(fetchedLinks);
+      setBaselineLinks(fetchedLinks);
+    } catch (err) {
+      console.error("Error fetching links:", err);
+      setError("Failed to fetch links");
+    } finally {
+      setLoading(false);
+    }
+  }, [targetUserId]);
 
   useEffect(() => {
-    async function fetchLinks() {
-      if (!currentUser) return;
-      setLoading(true);
-      try {
-        const querySnapshot = await getDocs(
-          collection(db, `users/${currentUser.uid}/links`)
-        );
-        const fetchedLinks = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setLinks(fetchedLinks);
-      } catch (err) {
-        console.error("Error fetching links:", err);
-        setError("Failed to fetch links");
-      } finally {
-        setLoading(false);
-      }
-    }
-
     fetchLinks();
-  }, [currentUser]);
+  }, [fetchLinks]);
 
   const addLink = () =>
     setLinks((prevLinks) => [
       ...prevLinks,
-      { selectedPlatform: "", url: "", isNew: true },
+      { clientId: createClientId(), selectedPlatform: "", url: "", isNew: true },
     ]);
 
   const updateLink = (index, updatedLinkData) =>
@@ -49,27 +70,46 @@ function useLinksManager() {
       )
     );
 
-  const removeLink = (linkId) => {
-    setRemovedLinks((prev) => [
-      ...prev,
-      links.find((link) => link.id === linkId),
-    ]);
-    setLinks((current) => current.filter((link) => link.id !== linkId));
+  const removeLink = (linkToRemove) => {
+    if (!linkToRemove) return;
+
+    if (linkToRemove.id) {
+      setRemovedLinks((prev) => [...prev, linkToRemove]);
+    }
+
+    setLinks((current) =>
+      current.filter((link) =>
+        linkToRemove.clientId
+          ? link.clientId !== linkToRemove.clientId
+          : link.id !== linkToRemove.id
+      )
+    );
+  };
+
+  const reorderLinks = (startIndex, endIndex) => {
+    if (startIndex === endIndex || startIndex < 0 || endIndex < 0) return;
+    setLinks((prevLinks) => {
+      const reordered = [...prevLinks];
+      const [movedLink] = reordered.splice(startIndex, 1);
+      reordered.splice(endIndex, 0, movedLink);
+      return reordered;
+    });
   };
 
   const saveLinks = async () => {
-    const userId = currentUser.uid;
+    const userId = currentUser?.uid;
     if (!userId) return;
 
     const batch = writeBatch(db);
 
-    links.forEach((link) => {
+    links.forEach((link, index) => {
       if (link.isNew) {
         // Add new link
         const newDocRef = doc(collection(db, `users/${userId}/links`));
         batch.set(newDocRef, {
           selectedPlatform: link.selectedPlatform,
           url: link.url,
+          order: index,
         });
       } else if (link.id) {
         // Update existing link
@@ -77,6 +117,7 @@ function useLinksManager() {
         batch.set(linkRef, {
           selectedPlatform: link.selectedPlatform,
           url: link.url,
+          order: index,
         });
       }
     });
@@ -91,6 +132,8 @@ function useLinksManager() {
 
     try {
       await batch.commit();
+      setRemovedLinks([]);
+      await fetchLinks();
       toast({
         title: "Success",
         description: "Links updated successfully.",
@@ -110,6 +153,14 @@ function useLinksManager() {
     }
   };
 
+  const hasUnsavedChanges = useMemo(() => {
+    const currentSnapshot = JSON.stringify(normalizeLinksForComparison(links));
+    const baselineSnapshot = JSON.stringify(
+      normalizeLinksForComparison(baselineLinks)
+    );
+    return currentSnapshot !== baselineSnapshot;
+  }, [links, baselineLinks, normalizeLinksForComparison]);
+
   return {
     links,
     setLinks,
@@ -117,9 +168,12 @@ function useLinksManager() {
     addLink,
     updateLink,
     removeLink,
+    reorderLinks,
     loading,
     saveLinks,
     error,
+    fetchLinks,
+    hasUnsavedChanges,
   };
 }
 

@@ -1,12 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "./useAuth";
 import { db } from "../firebase/firebaseconfig";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 
-const useUserProfile = () => {
+const useUserProfile = (userIdOverride = null) => {
   const [userProfile, setUserProfile] = useState(null);
   const [profileError, setProfileError] = useState("");
   const { currentUser } = useAuth();
+  const targetUserId = userIdOverride ?? currentUser?.uid;
 
   const updateUserProfile = async (profileData) => {
     if (!currentUser) {
@@ -24,11 +25,11 @@ const useUserProfile = () => {
     }
   };
 
-  const fetchUserProfile = async () => {
-    if (!currentUser) return;
+  const fetchUserProfile = useCallback(async () => {
+    if (!targetUserId) return;
 
     try {
-      const docRef = doc(db, `users/${currentUser.uid}`);
+      const docRef = doc(db, `users/${targetUserId}`);
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
         setUserProfile(docSnap.data());
@@ -40,17 +41,17 @@ const useUserProfile = () => {
       console.error("Error fetching user profile:", error);
       setProfileError(error.message);
     }
-  };
+  }, [targetUserId]);
 
   useEffect(() => {
     let isMounted = true;
-    if (currentUser && isMounted) {
+    if (targetUserId && isMounted) {
       fetchUserProfile();
     }
     return () => {
       isMounted = false;
     };
-  }, [currentUser]);
+  }, [targetUserId, fetchUserProfile]);
   return { userProfile, fetchUserProfile, updateUserProfile, profileError };
 };
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Flex, VStack, useToast, useMediaQuery } from "@chakra-ui/react";
+import { Flex, Text, VStack, useToast, useMediaQuery } from "@chakra-ui/react";
 import useUserProfile from "../hooks/useUserProfile";
 import Phone from "../features/Links/components/Phone";
 import UploadProfilePicture from "../features/ProfileDetails/UploadProfilePicture";
@@ -18,13 +18,27 @@ function ProfileDetailsPage() {
     email: "",
     photoURL: "",
   });
+  const [initialFormData, setInitialFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    photoURL: "",
+  });
 
   useEffect(() => {
     if (userProfile?.Info) {
       const { firstName, lastName, email, photoURL } = userProfile.Info;
-      setFormData({ firstName, lastName, email, photoURL });
+      const profileValues = { firstName, lastName, email, photoURL };
+      setFormData(profileValues);
+      setInitialFormData(profileValues);
     }
   }, [userProfile]);
+
+  const hasUnsavedChanges =
+    formData.firstName !== initialFormData.firstName ||
+    formData.lastName !== initialFormData.lastName ||
+    formData.email !== initialFormData.email ||
+    formData.photoURL !== initialFormData.photoURL;
 
   const validateForm = useCallback(() => {
     let newErrors = {};
@@ -42,6 +56,7 @@ function ProfileDetailsPage() {
     if (!validateForm()) return;
     try {
       await updateUserProfile(formData);
+      setInitialFormData(formData);
       toast({
         title: "Profile Updated",
         description: "Your profile has been successfully updated.",
@@ -65,8 +80,8 @@ function ProfileDetailsPage() {
       {isLargerThan1024 && <Phone />}
       <VStack
         flex="1"
-        spacing={5}
-        p={7}
+        spacing={4}
+        p={5}
         backgroundColor="#FFF"
         marginLeft="20px"
         marginRight="20px"
@@ -81,7 +96,12 @@ function ProfileDetailsPage() {
           onFieldChange={handleFieldChange}
           errors={errors}
         />
-        <ProfileDetailsFooter onSave={handleSubmit} />
+        <ProfileDetailsFooter onSave={handleSubmit} hasUnsavedChanges={hasUnsavedChanges} />
+        {hasUnsavedChanges && (
+          <Text width="100%" fontSize="xs" color="orange.500" textAlign="right">
+            Unsaved changes
+          </Text>
+        )}
       </VStack>
     </Flex>
   );

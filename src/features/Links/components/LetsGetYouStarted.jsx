@@ -24,7 +24,7 @@ function LetsGetYouStarted() {
         py={5}
         fontWeight="bold"
       >
-        Let's get you started
+        Let&apos;s get you started
       </Heading>
       <Text
         textAlign="center"

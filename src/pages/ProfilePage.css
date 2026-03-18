@@ -1,25 +1,42 @@
 .profile-page {
-    height: 100vh;
-    position: relative;
-    background-color: white;
+  min-height: 100vh;
+  padding: 16px;
+  background: #f6f6f8;
+}
+
+.profile-page-container {
+  width: 100%;
+  max-width: 420px;
+  margin: -150px auto 0;
+  border-radius: 22px;
+  background-color: #fff;
+  border: 1px solid #ececf2;
+  box-shadow: 0 16px 36px rgba(37, 37, 50, 0.12);
+  padding: 10px 18px 24px;
+  position: relative;
+  z-index: 2;
+}
+
+.shared-profile-page {
+  background: linear-gradient(
+    180deg,
+    var(--primary-purple-color) 0,
+    var(--primary-purple-color) 240px,
+    #f6f6f8 240px,
+    #f6f6f8 100%
+  );
+}
+
+.shared-profile-card {
+  margin-top: -18px;
 }
 
 @media (min-width: 768px) {
-    .profile-page-container {
-        position: absolute;
-        border-radius: 30px;
-        background-color: #FFF;
-        padding: 30px;
-        max-height: 550px;
-        overflow-y: scroll;
-        width: 300px;
-        top: 110px; 
-        left: 50%; 
-        margin-bottom: 100px;
-        transform: translate(-50%, -50%); 
-    }
-    
-    .profile-page {
-         background-color: transparent;
-    }
+  .profile-page {
+    padding: 34px 20px 48px;
+  }
+
+  .shared-profile-card {
+    margin-top: -4px;
+  }
 }

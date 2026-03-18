@@ -22,18 +22,26 @@ function ProfileDetailsForm({ formData, onFieldChange, errors }) {
 
   return (
     <Box
-      borderRadius={6}
-      p={5}
+      borderRadius={12}
+      p={{ base: 4, md: 5 }}
       width={isLargerThan768 ? "600px" : "100%"}
       backgroundColor="#FAFAFA"
+      border="1px solid"
+      borderColor="#ECECF2"
     >
-      <Stack direction="column" spacing={4}>
+      <Stack direction="column" spacing={3}>
         {fields.map(({ label, name, placeholder }) => (
-          <FormControl key={name} isRequired isInvalid={errors[name]}>
+          <FormControl
+            key={name}
+            isRequired={name === "firstName" || name === "lastName"}
+            isInvalid={errors[name]}
+          >
             <FormLabel htmlFor={name} fontSize="0.8rem">
               {label}
             </FormLabel>
             <Input
+              size="md"
+              height="40px"
               id={name}
               name={name}
               type="text"

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useId, useState } from "react";
 import {
   Box,
   Button,
@@ -17,14 +17,19 @@ import {
   getDownloadURL,
 } from "firebase/storage";
 import { getAuth } from "firebase/auth";
-import useUserProfile from "../../hooks/useUserProfile";
 
 function UploadProfilePicture({ onImageUpload, photoURL }) {
-  const { userProfile } = useUserProfile();
-  const [imagePreview, setImagePreview] = useState(UploadImg);
+  const [imagePreview, setImagePreview] = useState(photoURL || UploadImg);
   const [isHovering, setIsHovering] = useState(false);
   const toast = useToast();
   const auth = getAuth();
+  const inputId = useId();
+
+  useEffect(() => {
+    if (photoURL) {
+      setImagePreview(photoURL);
+    }
+  }, [photoURL]);
 
   const layoutStyle = useBreakpointValue({
     base: "column",
@@ -85,11 +90,15 @@ function UploadProfilePicture({ onImageUpload, photoURL }) {
       <VStack
         p={5}
         backgroundColor="#FAFAFA"
-        borderRadius="6px"
-        spacing={5}
+        borderRadius="12px"
+        border="1px solid"
+        borderColor="#ECECF2"
+        spacing={4}
         align="start"
+        width="100%"
+        maxW="600px"
       >
-        <Text fontSize="0.8rem" className="fontRegular">
+        <Text fontSize="0.8rem" fontWeight="600">
           Profile Picture
         </Text>
         <Box
@@ -97,36 +106,40 @@ function UploadProfilePicture({ onImageUpload, photoURL }) {
           flexDirection="column"
           justifyContent="center"
           alignItems="center"
-          h="180px"
-          w="180px"
-          borderRadius={6}
+          h="160px"
+          w="160px"
+          borderRadius={10}
+          cursor="pointer"
+          border="1px dashed"
+          borderColor="var(--primary-purple-color)"
           backgroundColor="var(--light-purple-color)"
           style={{
             backgroundImage: isHovering
-              ? `url(${userProfile?.Info?.photoURL})`
+              ? `url(${photoURL || imagePreview})`
               : "",
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
           onMouseEnter={() => setIsHovering(true)}
           onMouseLeave={() => setIsHovering(false)}
+          onClick={() => document.getElementById(inputId)?.click()}
         >
           <Image boxSize="10" src={imagePreview} alt="Profile" />
           <Button
             color="var(--primary-purple-color)"
             fontSize="0.8rem"
             background="none"
-            onClick={() => document.getElementById("imageUpload").click()}
+            onClick={() => document.getElementById(inputId)?.click()}
           >
             + Upload Image
           </Button>
         </Box>
-        <Text fontSize="0.65rem" className="fontRegular">
+        <Text fontSize="0.7rem" color="gray.600">
           Image must be below 1MB. Use PNG or JPG format.
         </Text>
         <input
           type="file"
-          id="imageUpload"
+          id={inputId}
           style={{ display: "none" }}
           onChange={handleImageChange}
           accept="image/png, image/jpeg"
@@ -141,12 +154,15 @@ function UploadProfilePicture({ onImageUpload, photoURL }) {
       direction={layoutStyle}
       p={5}
       backgroundColor="#FAFAFA"
-      borderRadius="6px"
+      borderRadius="12px"
+      border="1px solid"
+      borderColor="#ECECF2"
       align="center"
       justify="space-between"
-      width="600px"
+      width="100%"
+      maxW="600px"
     >
-      <Text fontSize="0.8rem" marginRight="130px" alignSelf="center">
+      <Text fontSize="0.8rem" fontWeight="600" marginRight="60px" alignSelf="center">
         Profile Picture
       </Text>
       <Box
@@ -154,36 +170,40 @@ function UploadProfilePicture({ onImageUpload, photoURL }) {
         flexDirection="column"
         justifyContent="center"
         alignItems="center"
-        h="180px"
-        w="180px"
-        borderRadius={6}
+        h="160px"
+        w="160px"
+        borderRadius={10}
+        cursor="pointer"
+        border="1px dashed"
+        borderColor="var(--primary-purple-color)"
         backgroundColor="var(--light-purple-color)"
         style={{
           backgroundImage: isHovering
-            ? `url(${userProfile?.Info?.photoURL})`
+            ? `url(${photoURL || imagePreview})`
             : "",
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
         onMouseEnter={() => setIsHovering(true)}
         onMouseLeave={() => setIsHovering(false)}
+        onClick={() => document.getElementById(inputId)?.click()}
       >
         <Image boxSize="10" src={imagePreview} alt="Profile" />
         <Button
           color="var(--primary-purple-color)"
           fontSize="0.8rem"
           background="none"
-          onClick={() => document.getElementById("imageUpload").click()}
+          onClick={() => document.getElementById(inputId)?.click()}
         >
           + Upload Image
         </Button>
       </Box>
-      <Text fontSize="0.65rem" width="130px" alignSelf="center">
+      <Text fontSize="0.7rem" color="gray.600" width="130px" alignSelf="center">
         Image must be below 1MB. Use PNG or JPG format.
       </Text>
       <input
         type="file"
-        id="imageUpload"
+        id={inputId}
         style={{ display: "none" }}
         onChange={handleImageChange}
         accept="image/png, image/jpeg"

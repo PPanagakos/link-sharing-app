@@ -19,17 +19,3 @@
     font-weight: normal;
     font-style: normal;
 }
-
-@font-face {
-    font-family: 'InstrumentSansItalic';
-    src: url('../assets/fonts/InstrumentSans-Italic-VariableFont_wdth\,wght.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'InstrumentSansVariable';
-    src: url('../assets/fonts/InstrumentSans-VariableFont_wdth\,wght.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}

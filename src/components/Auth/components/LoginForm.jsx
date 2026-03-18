@@ -7,12 +7,15 @@ import emailIcon from "../../../assets/images/icon-email.svg";
 import passwordIcon from "../../../assets/images/icon-password.svg";
 import CustomButton from "../../Button/CustomButton";
 import AuthFormFooter from "./AuthFormFooter";
+import { useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [formErrors, setFormErrors] = useState({});
-  const { login, authError } = useAuth();
+  const [demoLoading, setDemoLoading] = useState(false);
+  const { login, loginWithDemoAccount, authError } = useAuth();
   const toast = useToast();
+  const navigate = useNavigate();
 
   const handleInputChange = ({ target: { name, value } }) => {
     setFormData({ ...formData, [name]: value });
@@ -55,6 +58,55 @@ const LoginForm = () => {
     }
   };
 
+  const handleDemoLogin = async () => {
+    try {
+      setDemoLoading(true);
+      await loginWithDemoAccount();
+      toast({
+        title: "Demo account ready",
+        description: "Signed in with demo data so you can explore the app.",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+    } catch (error) {
+      const canUsePublicDemoFallback =
+        error?.code === "auth/operation-not-allowed" ||
+        error?.code === "auth/admin-restricted-operation" ||
+        error?.code === "auth/unauthorized-domain" ||
+        error?.code === "auth/network-request-failed" ||
+        error?.code === "permission-denied" ||
+        error?.code === "failed-precondition" ||
+        error?.code === "unauthenticated";
+
+      if (canUsePublicDemoFallback) {
+        toast({
+          title: "Demo preview mode",
+          description:
+            "Authentication is unavailable right now. Opened a public demo profile instead.",
+          status: "info",
+          duration: 5000,
+          isClosable: true,
+        });
+        navigate("/demo");
+        return;
+      }
+
+      toast({
+        title: "Demo login failed",
+        description:
+          authError ||
+          error?.message ||
+          "Unable to access the demo account right now.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    } finally {
+      setDemoLoading(false);
+    }
+  };
+
   return (
     <Box width="100%" maxWidth="500px" mx="auto" px={5}>
       <form onSubmit={handleSubmit}>
@@ -81,8 +133,19 @@ const LoginForm = () => {
             name="password"
             error={formErrors.password}
           />
-          <CustomButton className="secondaryButton fontSemiBold auth-button">
+          <CustomButton
+            type="submit"
+            className="secondaryButton fontSemiBold auth-button"
+          >
             Login
+          </CustomButton>
+          <CustomButton
+            type="button"
+            className="primaryButton fontSemiBold auth-button"
+            onClick={handleDemoLogin}
+            disabled={demoLoading}
+          >
+            {demoLoading ? "Signing in..." : "Try Demo Account"}
           </CustomButton>
         </VStack>
       </form>
