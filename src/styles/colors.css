@@ -18,7 +18,7 @@
 }
 
 .light-purple {
-    color: var(light-purple-color);
+    color: var(--light-purple-color);
 }
 
 .primary-black {
